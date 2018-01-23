@@ -17,6 +17,9 @@ namespace SuperTriangleShooterGame
         Vector2 ballPosition;
         float ballSpeed;
 
+        Vector2 pointingVector;
+        float playerRotation;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -77,21 +80,24 @@ namespace SuperTriangleShooterGame
                 ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (kstate.IsKeyDown(Keys.Up))
+            if (kstate.IsKeyDown(Keys.W))
                 ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Down))
+            if (kstate.IsKeyDown(Keys.S))
                 ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Left))
+            if (kstate.IsKeyDown(Keys.A))
                 ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Right))
+            if (kstate.IsKeyDown(Keys.D))
                 ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             ballPosition.X = Math.Min(Math.Max(ballTexture.Width / 2, ballPosition.X), graphics.PreferredBackBufferWidth - ballTexture.Width / 2);
             ballPosition.Y = Math.Min(Math.Max(ballTexture.Height / 2, ballPosition.Y), graphics.PreferredBackBufferHeight - ballTexture.Height / 2);
 
+
+            pointingVector = new Vector2(mstate.Position.X - ballPosition.X, mstate.Position.Y - ballPosition.Y);
+            playerRotation = (float) Math.Atan2(pointingVector.X, -pointingVector.Y);
 
             // TODO: Add your update logic here
 
@@ -106,7 +112,7 @@ namespace SuperTriangleShooterGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+            spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, playerRotation, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
             spriteBatch.End();
 
             base.Draw(gameTime);
